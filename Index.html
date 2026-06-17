@@ -65,6 +65,15 @@
     <div id="root"></div>
 
     <script type="text/babel">
+      window.onerror = function(msg, url, line, col, error) {
+        console.error("Error en script: ", msg, " en linea: ", line);
+        var root = document.getElementById("root");
+        if (root) {
+          root.innerHTML = "<div style="padding:20px; color:red; font-family:sans-serif;"><h1>Error de Cargue</h1><p>" + msg + "</p></div>";
+        }
+        return false;
+      };
+
       const { useState, useEffect, useMemo, useRef, useCallback } = React;
 
       // PROXY CONFIG
@@ -506,6 +515,8 @@
       };
 
       const RequestList = ({ setView, setSelectedRequest, initialData, onRefresh, refreshing, userContext }) => {
+
+
         const [filter, setFilter] = useState('Todo');
         const [search, setSearch] = useState('');
         const [page, setPage] = useState(1);
@@ -584,7 +595,7 @@
             const csvContent = [
                 headers.join(','),
                 ...exportData.map(row => headers.map(fieldName => {
-                    let val = row[fieldName] ? String(row[fieldName]).replace(/"/g, '""') : '';
+                    let val = row[fieldName] ? String(row[fieldName]).replace(/\"/g, '""') : '';
                     return `"${val}"`;
                 }).join(','))
             ].join('\n');
@@ -722,6 +733,8 @@
       };
 
       const RequestDetail = ({ requestId, onBack, preloadedData, secondaryData }) => {
+
+
         const detailData = useMemo(() => {
             if (!secondaryData) return null;
             const filterById = (list) => (list || []).filter(item => String(item.ID_SolicitudesConfiabilidad) === String(requestId));
@@ -1023,6 +1036,8 @@
       };
 
       const CreateRequest = ({ userContext, setView, onReload, secondaryData }) => {
+
+
         const [step, setStep] = useState(1);
         const [uploading, setUploading] = useState(false);
         const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0 });
@@ -1839,6 +1854,7 @@
       };
 
       const BulkUpload = ({ userContext, setView, onReload }) => {
+
         const [clients, setClients] = useState([]);
         const [selectedClient, setSelectedClient] = useState('');
         const [downloading, setDownloading] = useState(false);
@@ -2057,6 +2073,7 @@
       };
 
       const ConfigurationView = ({ userContext, onForceSync, syncStatus, lastSync, onRefreshClients }) => {
+
         return (
           <div className="p-8 max-w-4xl mx-auto animate-fade-in">
             <div className="flex justify-between items-center mb-6">
@@ -2122,6 +2139,7 @@
       };
       
       const App = () => {
+
         const [userCtx, setUserCtx] = useState(null);
         const [initError, setInitError] = useState(null);
         
